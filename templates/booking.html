@@ -1,0 +1,147 @@
+{% extends "master.html" %}
+
+{% block content %}
+<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+    
+    {% if success_id %}
+    <div class="mx-auto max-w-xl py-20 text-center">
+        <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h1 class="mt-8 text-4xl font-bold tracking-tight text-slate-900">Booking confirmed!</h1>
+        <p class="mt-4 text-lg text-slate-600">
+            Your <span class="font-bold text-slate-900">{{ product.name }}</span> is reserved successfully.
+        </p>
+        <div class="mt-2 inline-flex items-center rounded-full bg-slate-100 px-4 py-1 text-sm font-mono font-medium text-slate-500">
+            CONFIRMATION: #{{ success_id[:8]|upper }}
+        </div>
+        
+        <div class="mt-10 flex justify-center gap-4">
+            <a href="/orders" class="inline-flex h-12 items-center justify-center rounded-xl bg-slate-900 px-6 text-base font-semibold text-white shadow-lg transition-all hover:bg-slate-800 active:scale-95">
+                View my bookings
+            </a>
+            <a href="/products" class="inline-flex h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 text-base font-semibold text-slate-600 transition-all hover:bg-slate-50">
+                Browse more
+            </a>
+        </div>
+    </div>
+
+    {% else %}
+    
+    <a href="/products" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="m15 18-6-6 6-6"/></svg>
+        Back to fleet
+    </a>
+
+    <div class="mt-8 grid gap-10 lg:grid-cols-2">
+        <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
+            <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                {% if product.image %}
+                <img src="/static/uploads/{{ product.image }}" alt="{{ product.name }}" class="h-full w-full object-cover">
+                {% else %}
+                <div class="flex h-full w-full items-center justify-center text-slate-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                </div>
+                {% endif %}
+                <div class="absolute bottom-4 left-4">
+                    <span class="rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-widest text-slate-900 backdrop-blur-md shadow-sm">
+                        {{ product.category.name if product.category else 'Car' }}
+                    </span>
+                </div>
+            </div>
+            <div class="p-8">
+                <h1 class="text-3xl font-bold text-slate-900">{{ product.name }}</h1>
+                <div class="mt-3 flex flex-wrap gap-4 text-sm text-slate-500">
+                    
+                </div>
+                <div class="mt-8 border-t border-slate-100 pt-6">
+                    <p class="text-sm font-medium text-slate-400 uppercase tracking-tighter">Daily Rate</p>
+                    <p class="text-3xl font-black text-blue-600">฿{{ product.price_per_day }}<span class="text-base font-medium text-slate-400">/day</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/50">
+            <h2 class="flex items-center gap-3 text-2xl font-bold text-slate-900">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                </span>
+                Choose Dates
+            </h2>
+
+            <form action="/bookings/confirm" method="POST" class="mt-8 space-y-6">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" class="mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700">End Date</label>
+                        <input type="date" id="end_date" name="end_date" class="mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all" required>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-slate-50 p-5 space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-500">฿<span id="price_per_day">{{ product.price_per_day }}</span> × <span id="days_count">0</span> day(s)</span>
+                        <span class="font-semibold text-slate-900">฿<span id="subtotal">0</span></span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-500">Premium Insurance</span>
+                        <span class="font-bold text-emerald-600 tracking-wide uppercase text-[10px] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">Included</span>
+                    </div>
+                    <div class="mt-4 flex justify-between border-t border-slate-200 pt-4 font-bold text-xl text-slate-900">
+                        <span>Total Price</span>
+                        <span class="text-blue-600">฿<span id="total_price">0</span></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full rounded-xl bg-blue-600 py-4 text-lg font-bold text-white shadow-lg shadow-blue-200 transition-all hover:bg-blue-700 active:scale-[0.98]">
+                    Confirm Booking
+                </button>
+
+                {% if not request.session.get('user') %}
+                <p class="mt-4 text-center text-xs text-slate-400">
+                    You'll need to <a href="/login" class="font-bold text-blue-600 hover:underline">log in</a> to complete booking.
+                </p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    const startInput = document.getElementById('start_date');
+    const endInput = document.getElementById('end_date');
+    const pricePerDay = parseFloat(document.getElementById('price_per_day').innerText);
+    
+    // ตั้งค่าวันเริ่มต้นขั้นต่ำเป็นวันนี้
+    const today = new Date().toISOString().split('T')[0];
+    startInput.min = today;
+
+    function calculateTotal() {
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+        
+        if (start && end && end >= start) {
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // รวมวันแรก
+            
+            const total = diffDays * pricePerDay;
+            
+            document.getElementById('days_count').innerText = diffDays;
+            document.getElementById('subtotal').innerText = total.toLocaleString();
+            document.getElementById('total_price').innerText = total.toLocaleString();
+        }
+    }
+
+    startInput.addEventListener('change', () => {
+        endInput.min = startInput.value;
+        calculateTotal();
+    });
+    endInput.addEventListener('change', calculateTotal);
+</script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "master.html" %}
+
+{% block content %}
+<div class="mx-auto max-w-xl px-4 py-12 sm:px-6">
+    <a href="/orders" class="mb-6 inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="m15 18-6-6 6-6"/></svg>
+        Back to my bookings
+    </a>
+
+    <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/50">
+        <h1 class="text-2xl font-bold text-slate-900">Upload Payment Slip</h1>
+        <p class="mt-2 text-slate-500">Booking Reference: <span class="font-bold text-slate-700">#{{ booking.booking_no }}</span></p>
+        
+        <div class="mt-6 rounded-2xl bg-slate-50 p-6 text-center border border-slate-100">
+            <p class="text-sm font-semibold text-slate-500 uppercase tracking-widest">Total Amount to Pay</p>
+            <p class="text-4xl font-black text-blue-600 mt-2">฿{{ booking.amount_total }}</p>
+        </div>
+
+        <div class="mt-6 border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600 mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            </div>
+            <p class="text-sm font-bold text-slate-700">Kasikorn Bank (KBank)</p>
+            <p class="text-2xl font-mono font-bold text-slate-900 mt-1">123-4-56789-0</p>
+            <p class="text-sm text-slate-500 mt-1">Car Hub Co., Ltd.</p>
+        </div>
+
+        <form action="/bookings/payment/{{ booking.id }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-6">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700">Upload Slip Image</label>
+                <div class="mt-2 flex items-center justify-center w-full">
+                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-3 text-slate-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
+                            <p class="mb-2 text-sm text-slate-500"><span class="font-semibold">Click to upload</span></p>
+                        </div>
+                        <input id="dropzone-file" type="file" name="slip" accept="image/*" class="hidden" required />
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="w-full rounded-xl bg-blue-600 py-4 text-lg font-bold text-white shadow-lg shadow-blue-200 transition-all hover:bg-blue-700 active:scale-[0.98]">
+                Confirm Payment
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById('dropzone-file');
+    fileInput.addEventListener('change', function(e) {
+        if(e.target.files.length > 0) {
+            const fileName = e.target.files[0].name;
+            const labelContent = fileInput.previousElementSibling;
+            labelContent.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><p class="text-sm font-medium text-emerald-600">${fileName}</p>`;
+        }
+    });
+</script>
+{% endblock %}
