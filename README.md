@@ -9,3 +9,5 @@ python seed.py
 ## ขั้นตอนการใช้งาน
 - เปิด server
 - เข้า http://127.0.0.1:8000
+
+- uvicorn main:app --host 0.0.0.0 --port $PORT
